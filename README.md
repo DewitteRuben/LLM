@@ -86,6 +86,10 @@ Managing these tasks manually can be cumbersome, especially since each LLM appli
 
 LangChain provides tools and abstractions that allow developers to focus on the application's needs rather than dealing with API peculiarities, boilerplate code, or reinventing the wheel.
 
+### Programming Languages
+
+LangChain is available in Python and JavaScript. Python is more popular and has better support from other libraries like Hugging Face. For example, the Hugging Face pipeline library isn’t available in JavaScript, so you’re stuck using their Inference API, which means interacting with a model hosted remotely instead of running it on your own machine. Overall, JavaScript seems like the better option if all you need is to interface with a model that is running in the cloud.
+
 ### Model interfacing
 
 LangChain can be used in two primary ways: either by interfacing directly with a local model or through an API provided by major vendors. LangChain provides abstractions for all the major vendors. For this we will make use of the `langchain-huggingface` package, which is a package that is maintained in collaboration with Hugging Face themselves.
@@ -209,4 +213,42 @@ vector_store.add_documents(chunks)
 
 # We can then run a similarity search using the prompt that was provided
 retrieved_docs = vector_store.similarity_search("What is Task Decomposition?")
+```
+
+**Retrieval chain using LCEL**
+
+After preparing our vector store with embedded documents, we can create a complete RAG pipeline using LangChain Expression Language (LCEL). LCEL provides a simple, intuitive way to chain together different components of our retrieval and generation workflow.
+
+```python
+system_prompt = """You are an expert assistant that answers questions about machine learning and Large Language Models (LLMs). 
+You are given some extracted parts from machine learning papers along with a question. 
+If you don't know the answer, just say "I don't know." Don't try to make up an answer. 
+It is very important that you ALWAYS answer the question in the same language the question is in. 
+Use only the following pieces of context to answer the question at the end.
+"""
+
+user_prompt = """
+Context: {context}
+Question is below. Remember to answer in the same language"
+Question: {question}"""
+
+prompt = ChatPromptTemplate([
+    ("system", system_prompt),
+    ("human", user_prompt),
+])
+
+def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+qa_chain = (
+    {
+        "context": vector_store.as_retriever() | format_docs,
+        "question": RunnablePassthrough(),
+    }
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+qa_chain = qa_chain.invoke("What is Task Decomposition?")
 ```
