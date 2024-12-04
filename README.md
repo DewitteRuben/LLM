@@ -1,8 +1,6 @@
 # Introduction
 
-Large Language Models (LLMs) have revolutionized natural language processing (NLP), enabling applications ranging from text generation to complex problem-solving. While there are many LLMs to choose from, they share common underlying principles.
-
-An LLM on its own is essentially a text generator with. It generates text by predicting the next sequence of words based on the input (prompt) it receives. Its output is determined by patterns and relationships learned from the datasets during training.
+A Large Language Models (LLMs) on its own is essentially a text generator with. It generates text by predicting the next sequence of words based on the input (prompt) it receives. Its output is determined by patterns and relationships learned from the datasets during training.
 
 This raises some questions, such as:
 
@@ -250,5 +248,115 @@ qa_chain = (
     | StrOutputParser()
 )
 
-qa_chain = qa_chain.invoke("What is Task Decomposition?")
+result = qa_chain.invoke("What is Task Decomposition?")
 ```
+
+The above defined chain does the following in sequence:
+
+- Retrieves relevant documents from a vector store
+- Formats those documents
+-  Passes the context and original question to the prompt template
+- Sends this to the LLM
+- Converts the output to a string
+
+`RunnablePassthrough()` is a component from LangChain that essentially does exactly what its name suggests, it "passes through" the input without changing it. In this case, it makes sure that the original question is preserved and passed forward without modification.
+
+### Agents, tools and LangGraph
+
+Agents rely on a language model to figure out what actions to take and in what order. In chains, the actions and their order are fixed in the code. With agents, the language model decides the actions step by step as it goes.
+
+We can combine agents with LangGraph, a framework in the LangChain ecosystem, to build smart and flexible workflows. LangGraph acts like a map with clear steps and paths, while agents are like problem solvers that decide each step as they progress.
+
+Agents can also use tools to help them. A tool is something the agent can use when needed, like calling a web API, doing a calculation, or searching for information.
+
+Here’s how an agent works:
+
+- At each step, the agent looks at the situation and uses the LLM to decide what to do next.
+- If it needs to perform a specific task (like fetching data from a website), it checks if it has a tool for that job.
+- If the tool is available, the agent uses it and works with the results.
+- Then, the agent moves to the next step in the workflow.
+
+Below is an implementation example where a LangGraph StateGraph is paired with a with tool that will retrieve data from the vector store if needed. If no retrieval is needed, the agent responds directly.
+
+```python
+llm_engine_hf = ChatHuggingFace(llm=llm)
+    
+graph_builder = StateGraph(MessagesState)
+
+@tool(response_format="content_and_artifact")
+def retrieve(query: str):
+    """Retrieve information related to a query."""
+    retrieved_docs = vector_store.similarity_search(query, k=2)
+    serialized = "\n\n".join(
+        (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
+        for doc in retrieved_docs
+    )
+    return serialized, retrieved_docs
+
+def query_or_respond(state: MessagesState):
+    """Generate tool call for retrieval or respond."""
+    llm_with_tools = llm_engine_hf.bind_tools([retrieve])
+    response = llm_with_tools.invoke(state["messages"])
+    # MessagesState appends messages to state instead of overwriting
+    return {"messages": [response]}
+
+
+tools = ToolNode([retrieve])
+
+def generate(state: MessagesState):
+    recent_tool_messages = []
+    for message in reversed(state["messages"]):
+        if message.type == "tool":
+            recent_tool_messages.append(message)
+        else:
+            break
+    tool_messages = recent_tool_messages[::-1]
+
+    # Format into prompt
+    docs_content = "\n\n".join(doc.content for doc in tool_messages)
+    system_message_content = (
+        "You are an assistant for question-answering tasks. "
+        "Use the following pieces of retrieved context to answer "
+        "the question. If you don't know the answer, say that you "
+        "don't know. Use three sentences maximum and keep the "
+        "answer concise."
+        "\n\n"
+        f"{docs_content}"
+    )
+    conversation_messages = [
+        message
+        for message in state["messages"]
+        if message.type in ("human", "system")
+        or (message.type == "ai" and not message.tool_calls)
+    ]
+    prompt = [SystemMessage(system_message_content)] + conversation_messages
+
+    # Run
+    response = llm_engine_hf.invoke(prompt)
+    return {"messages": [response]}
+
+graph_builder.add_node(query_or_respond)
+graph_builder.add_node(tools)
+graph_builder.add_node(generate)
+
+graph_builder.set_entry_point("query_or_respond")
+graph_builder.add_conditional_edges(
+    "query_or_respond",
+    tools_condition,
+    {END: END, "tools": "tools"},
+)
+graph_builder.add_edge("tools", "generate")
+graph_builder.add_edge("generate", END)
+
+graph = graph_builder.compile()
+
+input_message = "What is Task Decomposition?"
+
+for step in graph.stream(
+    {"messages": [{"role": "user", "content": input_message}]},
+    stream_mode="values",
+):
+    step["messages"][-1].pretty_print()
+```
+
+It's important to note that tools will depend entirely on the LLM, if an LLM is weaker, it may not use the appropriate tools, or it may hallucinate the use of tools and not use the proper tool or use it at the wrong time.
