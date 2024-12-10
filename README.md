@@ -152,8 +152,6 @@ If you use case does require you to load loads of data within a given context, e
 
 To combat this it is practical for your application to basically look up the appropriate context on the fly depending on the prompt that was given. This process is called RAG (Retrieval Augmented Generation)
 
-Here's the corrected version of your text with errors and inaccuracies addressed, without rewriting unnecessarily:
-
 ### RAG
 
 In short, RAG essentially means that we will look up the context we want to provide, together with the prompt to the LLM, using some sort of prepared storage (usually a vector store).
