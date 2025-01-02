@@ -1,6 +1,6 @@
 ## Overview
 
-In this section, we will explore RAG using the vector database FAISS, a powerful library developed by Facebook AI Research that allows for efficient similarity search and clustering of dense vectors.
+In this section, we will explore RAG using the vector database FAISS.
 
 We will walk through:
 - Understanding how FAISS represents data in vectors.
@@ -10,11 +10,11 @@ We will walk through:
 
 ## What is FAISS?
 
-FAISS contains algorithms that search in sets of vectors of any size, up to ones that possibly do not fit in RAM. It also contains supporting code for evaluation and parameter tuning.
+FAISS, which stands for Facebook AI Similarity Search, is an open-source library developed by Facebook AI Research. It specializes in fast similarity search and clustering for dense vectors, making it particularly useful when working with large-scale datasets that demand efficient retrieval and analysis.
 
-Imagine you have lots of “points”, each described by a list of numbers (their “coordinates”). 
+FAISS shines when you're dealing with huge piles of data, letting you quickly find what you need thanks to its smart indexing and retrieval features. It's been tested in the real world with massive databases, and it handles them like a champ without slowing down. By cutting through the complexity of data management, it becomes a go-to solution for projects that demand lightning-fast similarity searches and clustering of dense vectors.
 
-For example, each point might be a 64-dimensional vector, meaning it has 64 numbers that represent it. 
+## FAISS and data
 
 1. **How the data is stored**  
    - The vectors are stored in a “row-major” matrix, meaning each row corresponds to one vector.
@@ -32,10 +32,10 @@ In everyday terms:
 
 ## Installing FAISS
 
-It is recommended to install FAISS using [Conda](https://www.anaconda.com/download/success). For this example, we will install the **CPU-only** version of FAISS, which avoids GPU compatibility issues (especially on macOS):
+For this example, we will install the **CPU-only** version of FAISS, which avoids GPU compatibility issues (especially on macOS):
 
 ```bash
-conda install -c pytorch faiss-cpu=1.9.0
+pip install -U faiss-cpu
 ```
 
 ### Vector Databases in FAISS
