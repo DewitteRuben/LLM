@@ -135,7 +135,7 @@ Imagine you’ve got a giant crowd of people, and you need to find the person wh
 
 So instead, you split the crowd into smaller groups—like “cells” or “neighborhoods.” Each group has a “leader” (a centroid). When you show up, you figure out which group’s leader you’re nearest to. Then you only search within that one group instead of the entire crowd. It’s an approximate method, because you skip all the other groups, but it’s way faster than looking at every single person in the room.
 
-![Voronoi Cells Visualization](../images/cells.png)
+![Voronoi Cells Visualization](images/cells.png)
 
 ### Implementing Partitioning (IVF indexing)
 
@@ -194,7 +194,7 @@ When working with huge datasets, storing every vector in its full “Flat” for
 
 But what does PQ do? You can think of it as an extra approximation step, somewhat like how IVF narrows down your search range. Instead of focusing on which vectors to compare (like IVF), PQ shrinks the vectors themselves, making the distance or similarity calculations more efficient. This compression happens in three main stages, helping strike a balance between speed and accuracy in massive vector databases.
 
-![Quantization](../images/quantization.png)
+![Quantization](images/quantization.png)
 
 **How the compression works:**
 1. First, the full vector is cut into smaller “sub-vectors.”  
