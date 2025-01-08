@@ -97,7 +97,7 @@ When using FAISS, you must first create an **index** that tells FAISS how to sto
 
 The graph below nicely shows you which index to use for which situation.
 
-![Index Selection Graph](../images/indexes.png)
+![Index Selection Graph](images/indexes.png)
 
 
 ### 3. Query the Index
