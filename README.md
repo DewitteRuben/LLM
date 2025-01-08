@@ -27,3 +27,5 @@ An overview of LLMs with examples of building a simple LLM app using LangChain a
 
 ### **Chroma**
 - Focuses on using [Chroma](https://docs.trychroma.com/) for vector database management.
+- Includes:
+  - **chroma-example.py**:  Example script builds a simple semantic search engine using ChromaDB.
