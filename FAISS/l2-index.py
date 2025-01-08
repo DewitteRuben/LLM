@@ -20,17 +20,11 @@ sentence_embeddings = model.encode(sentences)
 # get dimension of vector databse
 d = sentence_embeddings.shape[1]
 
-nlist = 10  # how many cells
-quantizer = faiss.IndexFlatL2(d)
-index = faiss.IndexIVFFlat(quantizer, d, nlist)
-
-index.train(sentence_embeddings)
+# create index with dimension of vector database (415 in this case)
+index = faiss.IndexFlatL2(d)
 
 # add embeddings to index
 index.add(sentence_embeddings)
-
-# We can change the number of nearby cells to search too with `nprobe`.
-index.nprobe = 5
 
 # encode query with the same embeddings
 k = 4

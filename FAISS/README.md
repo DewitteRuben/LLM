@@ -7,7 +7,6 @@ We will walk through:
 - A simple code example that demonstrates how to index text data (from a Wikipedia article on cats) and query it using FAISS.
 - Partitioning and quantizing vectors to speed up search (using indexes).
 
-
 ## What is FAISS?
 
 FAISS, which stands for Facebook AI Similarity Search, is an open-source library developed by Facebook AI Research. It specializes in fast similarity search and clustering for dense vectors, making it particularly useful when working with large-scale datasets that demand efficient retrieval and analysis.
@@ -217,3 +216,5 @@ D, I = index.search(xq, k)
 
 print(I)
 ```
+
+## FAISS With LangChain
