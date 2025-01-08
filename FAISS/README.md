@@ -138,6 +138,10 @@ So instead, you split the crowd into smaller groups—like “cells” or “nei
 
 ### Implementing Partitioning (IVF indexing)
 
+Inverted File Index (IVF) is the indexing method used to split our data into partitions as explained above.
+
+Let's go through the steps to index data using IVF with the FAISS toolchain.
+
 **1. Decide How Many Cells (nlist)**
 
 We first decide how many partitions, or “cells,” we want in our index. This number can significantly affect both the speed and accuracy of searches (more cells can offer faster but sometimes less accurate retrieval).
@@ -216,5 +220,3 @@ D, I = index.search(xq, k)
 
 print(I)
 ```
-
-## FAISS With LangChain

@@ -1,4 +1,4 @@
-## Overview
+## What is ChromaDb?
 
 Chroma is a relatively new player in the vector database world, but it has quickly gained momentum thanks to its user-friendly design and focus on providing a complete, end-to-end solution. Its intuitive interface makes it easy for developers at any level to get started, which sets it apart from other options on the market.
 
@@ -8,8 +8,15 @@ Another standout feature is Chroma’s embeddability, which lets you seamlessly 
 
 Chroma also supports a variety of storage backends, including in-memory, SQLite, and cloud-based options. This flexibility means you can pick the storage solution that best suits your project. Whether you're building a small proof of concept or a large-scale application, Chroma adapts to your needs and lets you focus on building what matters.
 
+## Installing ChromaDb
 
-## Code example
+In this example, we'll install `chromadb` along with the `sentence_transformers` package, which enables us to easily use Hugging Face embedders.
+
+```python
+pip install -U sentence_transformers chromadb
+```
+
+## Code example using ChromaDb
 
 ### **1. Initialize Chroma and Set Up a Collection**
 Start by initializing the Chroma client, which acts as the interface to your database. Create or retrieve a collection to store embeddings, documents, and metadata.
@@ -18,8 +25,7 @@ Start by initializing the Chroma client, which acts as the interface to your dat
 from chromadb import Client
 client = Client()
 
-collection_name = "cat_wiki"
-collection = client.create_collection(name=collection_name) if collection_name not in client.list_collections() else client.get_collection(name=collection_name)
+collection = client.get_or_create_collection(name="cat_collection")
 ```
 
 ### **2. Prepare and Embed the Data**
@@ -76,7 +82,7 @@ for idx, document in enumerate(results["documents"][0]):
 
 2. **Customizability**: FAISS offers fine-grained control over indexing methods and distance metrics, allowing for advanced use cases requiring tailored algorithms or hybrid approaches.
 
-3. **Proven Scalability**: FAISS is widely adopted in production systems for handling massive datasets, offering indexing techniques like IVF (Inverted File Index) and HNSW (Hierarchical Navigable Small World) for scalable search.
+3. **Proven Scalability**: FAISS is widely adopted in production systems for handling massive datasets, offering indexing techniques like IVF (Inverted File Index) for scalable search.
 
 ### Choosing Between Chroma and FAISS
 
