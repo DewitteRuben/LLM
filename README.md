@@ -8,8 +8,6 @@ It showcases various approaches to managing and querying embeddings with the hel
 
 The repository is organized into the following directories:
 
-Here’s a follow-up on each point without repetition:
-
 ### **Introduction**
 
 An overview of LLMs with examples of building a simple LLM app using LangChain and Python scripts:
