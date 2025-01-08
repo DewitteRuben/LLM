@@ -1,6 +1,8 @@
 # Overview
 
-This repository is designed to explore and demonstrate the integration of LLMs with vector search technologies. This project showcases various approaches to managing and querying embeddings with the help of Retrieval-Augmented Generation (using FAISS and Chroma).
+This repository is designed to explore and demonstrate the integration of LLMs with vector search technologies. 
+
+It showcases various approaches to managing and querying embeddings with the help of Retrieval-Augmented Generation (using FAISS and Chroma).
 
 ## Project Structure
 
@@ -12,9 +14,10 @@ Here’s a follow-up on each point without repetition:
 
 An overview of LLMs with examples of building a simple LLM app using LangChain and Python scripts:
 
-- **rag-chain.py**: Focuses on a straightforward RAG pipeline, ideal for learning the basics of embedding storage and context-based querying.  
-- **rag-graph.py**: Expands on the pipeline by introducing state graphs, improving the organization and flow of data for more complex use cases.  
-- **rag-graph-tools.py**: Takes the concept further by integrating tools/
+- Includes:
+  - **rag-chain.py**: Focuses on a straightforward RAG pipeline, ideal for learning the basics of embedding storage and context-based querying.  
+  - **rag-graph.py**: Expands on the pipeline by introducing state graphs, improving the organization and flow of data for more complex use cases.  
+  - **rag-graph-tools.py**: Takes the concept further by integrating tools/
 
 
 ### **FAISS**
@@ -23,7 +26,7 @@ An overview of LLMs with examples of building a simple LLM app using LangChain a
   - **l2-index.py**:  Example script that uses FAISS for vector searching with an L2 index (Euclidean distance).
   - **ivf-index.py**: Example script that uses FAISS for vector searching with an L2 index combined with IVF partitioning.
   - **langchain/**: 
-    - **langchain-faiss.py**: Demonstrates FAISS integration with LangChain.
+    - **langchain-faiss.py**: Demonstrates FAISS integration with LangChain and LangChain's HuggingFace API.
 
 ### **Chroma**
 - Focuses on using [Chroma](https://docs.trychroma.com/) for vector database management.
